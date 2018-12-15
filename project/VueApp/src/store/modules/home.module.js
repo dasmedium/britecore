@@ -48,3 +48,10 @@ const mutations = {
     state.isLoading = false;
   }
 };
+
+export default {
+  state,
+  getters,
+  actions,
+  mutations
+};
