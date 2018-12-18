@@ -9,16 +9,21 @@ function config() {
     database: db.name,
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0 
+    queueLimit: 0
   };
 }
 
-let pool = null;
-const self = (module.exports = {
-  sql,
-  async main() {
-    const connection = await sql.createConnection(config());
+async function pool() {
+  try {
+    getPool = await sql.createPool(config());
 
-    return connection;
+    return getPool;
+  } catch (err) {
+    throw new Error(err);
   }
-});
+}
+
+module.exports = {
+  sql,
+  pool
+};

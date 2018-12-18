@@ -90,7 +90,12 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
-  }
+  },
+  computed: {
+      getData(){
+        return store.state.getData
+      }
+  },
 }
 </script>
 
