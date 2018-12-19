@@ -38,3 +38,9 @@ const ApiService = {
 };
 
 export default ApiService;
+
+export const TransactionService = {
+  query(params) {
+    return ApiService.query("customers", { params: params });
+  }
+};

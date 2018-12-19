@@ -13,6 +13,19 @@ router.get("/", async function(req, res, next) {
     return res.status(400).json(err);
   }
 });
+// Get with Filters
+router.get("/:offset/:limit", async function(req, res, next) {
+  const { offset, limit } = req.params;
+  const sqlReq = await pool();
+  try {
+    let customerData = await sqlReq.execute(
+      `SELECT * from customers LIMIT ${offset}, ${limit}`
+    );
+    return res.send(customerData);
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+});
 // Update Description by Id
 router.post("/:id", async (req, res, next) => {
   const { Description } = req.body;
