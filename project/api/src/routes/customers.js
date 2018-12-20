@@ -8,7 +8,13 @@ router.get("/", async function(req, res, next) {
   const sqlReq = await pool();
   try {
     let customerData = await sqlReq.execute("select * from customers");
-    return res.send(customerData);
+    let transactionCount = customerData[0].length;
+    let transactions = customerData[0];
+    let response = {
+      transactions,
+      transactionCount
+    };
+    return res.status(200).send(response);
   } catch (err) {
     return res.status(400).json(err);
   }
@@ -21,7 +27,18 @@ router.get("/:offset/:limit", async function(req, res, next) {
     let customerData = await sqlReq.execute(
       `SELECT * from customers LIMIT ${offset}, ${limit}`
     );
-    return res.send(customerData);
+    let totalCounts = await sqlReq.execute(`SELECT COUNT(*) FROM customers`);
+
+    let countArr = totalCounts[0];
+    let countObj = countArr[Object.keys(countArr)[0]];
+    let transactionCount = countObj[Object.keys(countObj)[0]];
+
+    let transactions = customerData[0];
+    let response = {
+      transactions,
+      transactionCount
+    };
+    return res.status(200).send(response);
   } catch (err) {
     return res.status(400).json(err);
   }

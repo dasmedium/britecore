@@ -1,4 +1,4 @@
-import { ApiService } from "../../common/api.service";
+import { TransactionService } from "../../common/api.service";
 import { GET_DATA, GET_DATA_SUCCESS, GET_DATA_ERROR } from "../mutations.type";
 import { GET_TRANSACTIONS } from "../actions.type";
 
@@ -10,8 +10,8 @@ const state = {
 };
 
 const getters = {
-  articlesCount(state) {
-    return state.articlesCount;
+  transactionCount(state) {
+    return state.transactionCount;
   },
   transactions(state) {
     return state.transactions;
@@ -24,7 +24,7 @@ const getters = {
 const actions = {
   [GET_TRANSACTIONS]({ commit }, params) {
     commit(GET_DATA);
-    return ApiService.query(params.type, params.filters)
+    return TransactionService.query(params.filters)
       .then(({ data }) => {
         commit(GET_DATA_SUCCESS, data);
       })
