@@ -9,6 +9,7 @@ import ApiService from "./common/api.service";
 
 Vue.config.productionTip = false;
 ApiService.init();
+Vue.prototype.bus = new Vue();
 
 /* eslint-disable no-new */
 new Vue({

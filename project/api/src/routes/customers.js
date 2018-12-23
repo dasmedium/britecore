@@ -20,8 +20,8 @@ router.get("/", async function(req, res, next) {
   }
 });
 // Get with Filters
-router.get("/:offset/:limit", async function(req, res, next) {
-  const { offset, limit } = req.params;
+router.get("/filtered", async function(req, res, next) {
+  const { offset, limit } = req.query;
   const sqlReq = await pool();
   try {
     let customerData = await sqlReq.execute(

@@ -23,7 +23,7 @@
           />
         </tbody>
       </table>
-      <Pagination :pages="pages" :currentPage.sync="currentPage" />
+      <Pagination :pages="pages" v-bind:currentPage.sync="currentPage" />
     </div>
   </div>
 </template>
@@ -34,7 +34,7 @@ import TransactionItem from "./Transaction";
 import Pagination from "./Pagination";
 import { GET_TRANSACTIONS } from "../store/actions.type";
 export default {
-  name: "TransactionList",
+  name: "TransactionTable",
   components: {
     TransactionItem,
     Pagination
@@ -76,6 +76,13 @@ export default {
       this.configList.filters.offset = (newPage - 1) * this.itemsPerPage;
       this.getTransactions();
     }
+  },
+
+  created() {
+    this.bus.$on("update:Page", toPage => {
+      this.configList.filters.offset = (toPage - 1) * this.itemsPerPage;
+      this.getTransactions();
+    });
   },
   mounted() {
     this.getTransactions();

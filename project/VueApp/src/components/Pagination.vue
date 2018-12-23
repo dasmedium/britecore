@@ -5,9 +5,9 @@
         v-for="page in pages"
         :key="page"
         :class="paginationClass(page)"
-        @click.prevent="changePage(page);"
+        @click.prevent="changePage(page)"
       >
-        <a class="page-link" v-text="page" href>
+        <a class="page-link" v-text="page" href />
       </li>
     </ul>
   </nav>
@@ -26,16 +26,16 @@ export default {
     }
   },
   methods: {
-    changePage(toPage){
+    changePage(toPage) {
       if (toPage === this.currentPage) return;
-      this.$emit('update:Page', [...toPage])
+      this.bus.$emit("update:Page", toPage);
     },
-    paginationClass(page){
+    paginationClass(page) {
       return {
         "page-item": true,
         active: this.currentPage === page
-      } 
+      };
     }
   }
-}
+};
 </script>
