@@ -22,8 +22,12 @@
             :key="index"
           />
         </tbody>
+        <Pagination
+          :pages="pages"
+          v-on:update:Page="currentPage = $event"
+          :currentPage="currentPage"
+        />
       </table>
-      <Pagination :pages="pages" v-bind:currentPage.sync="currentPage" />
     </div>
   </div>
 </template>
@@ -46,7 +50,7 @@ export default {
       default: 15
     }
   },
-  data() {
+  data: function() {
     return {
       currentPage: 1
     };
@@ -77,20 +81,13 @@ export default {
       this.getTransactions();
     }
   },
-
-  created() {
-    this.bus.$on("update:Page", toPage => {
-      this.configList.filters.offset = (toPage - 1) * this.itemsPerPage;
-      this.getTransactions();
-    });
-  },
   mounted() {
     this.getTransactions();
   },
   methods: {
     getTransactions() {
       this.$store.dispatch(GET_TRANSACTIONS, this.configList);
-    }
+  }
   }
 };
 </script>

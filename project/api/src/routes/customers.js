@@ -10,6 +10,12 @@ router.get("/", async function(req, res, next) {
     let customerData = await sqlReq.execute("select * from customers");
     let transactionCount = customerData[0].length;
     let transactions = customerData[0];
+    transactions.sort((a, b) => {
+      return b.Date - a.Date;
+    });
+    // transactions.map(transaction => {
+    //   moment(transaction.Date, moment.ISO_8601).format('MMM Do YYYY');
+    // })
     let response = {
       transactions,
       transactionCount
@@ -34,6 +40,10 @@ router.get("/filtered", async function(req, res, next) {
     let transactionCount = countObj[Object.keys(countObj)[0]];
 
     let transactions = customerData[0];
+    transactions.sort((a, b) => {
+      return b.Date - a.Date;
+    });
+
     let response = {
       transactions,
       transactionCount
@@ -51,13 +61,31 @@ router.post("/:id", async (req, res, next) => {
   const addDescription = `UPDATE customers SET Description = '${Description}' WHERE id = '${id}';`;
   const getRecord = `SELECT * from customers WHERE id = '${id}';`;
   const sqlReq = await pool();
-  let addedDesc = await sqlReq.query(addDescription);
+  await sqlReq.query(addDescription);
   const gotRec = await sqlReq.query(getRecord);
   if (!isValid) {
     return res.status(400).json(errors);
   }
   try {
-    return res.send(gotRec);
+    let recArr = gotRec[0];
+    let transaction = recArr[Object.keys(recArr)[0]];
+    return res.send(transaction);
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+});
+
+// Get By Id
+router.get("/:id", async (req, res, next) => {
+  const { id } = req.params;
+  const getRecord = `SELECT * from customers WHERE id = '${id}';`;
+  const sqlReq = await pool();
+  const gotRec = await sqlReq.query(getRecord);
+  try {
+    let recArr = gotRec[0];
+    let transaction = recArr[Object.keys(recArr)[0]];
+
+    return res.send(transaction);
   } catch (err) {
     return res.status(400).json(err);
   }

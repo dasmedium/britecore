@@ -28,7 +28,7 @@ export default {
   methods: {
     changePage(toPage) {
       if (toPage === this.currentPage) return;
-      this.bus.$emit("update:Page", toPage);
+      this.$emit("update:Page", toPage);
     },
     paginationClass(page) {
       return {

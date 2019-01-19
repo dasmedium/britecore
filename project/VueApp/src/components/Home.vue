@@ -6,7 +6,7 @@
 import TransactionTable from "./TransactionTable";
 
 export default {
-  name: "HelloWorld",
+  name: "Home",
   components: {
     TransactionTable
   },
