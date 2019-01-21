@@ -1,6 +1,6 @@
 import { TransactionService } from "../../common/api.service";
 import { GET_DATA, GET_DATA_SUCCESS, GET_DATA_ERROR } from "../mutations.type";
-import { GET_TRANSACTIONS } from "../actions.type";
+import { GET_TRANSACTIONS, DESCRIPTION_EDIT } from "../actions.type";
 // import moment from "moment";
 
 const state = {
@@ -44,6 +44,9 @@ const actions = {
       .catch(error => {
         commit(GET_DATA_ERROR, error);
       });
+  },
+  async [DESCRIPTION_EDIT](context, payload) {
+    await TransactionService.post(payload);
   }
 };
 

@@ -44,6 +44,6 @@ export const TransactionService = {
     return ApiService.query("customers/filtered", { params: params });
   },
   post(params) {
-    return ApiService.post("customers" + `/${params.id}`, params.Description);
+    return ApiService.post("customers" + `/${params.id}`, params);
   }
 };

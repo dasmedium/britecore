@@ -10,16 +10,20 @@
       {{ transaction.Description }}
     </td>
     <td v-else>
-      <form action="">
+      <form>
         <textarea
           :value="transaction.Description"
           :placeholder="transaction.Description"
           @input="updateDescription"
+          :key="transaction.id"
+          class="form-control"
+          v-bind:class="{ 'is-invalid': hasError }"
         />
+        <div v-if="this.hasError" class="invalid-feedback">{{ errors }}</div>
         <button v-on:click="isOpen = !isOpen">
           <icon-base icon-name="cancel"><icon-cancel /> </icon-base>
         </button>
-        <button v-on:click="submit(transaction)">
+        <button v-on:click="submit">
           <icon-base icon-name="done"><icon-done /> </icon-base>
         </button>
       </form>
@@ -52,7 +56,8 @@ export default {
   data: function() {
     return {
       isOpen: false,
-      transactionItem: Object
+      errors: {},
+      hasError: false
     };
   },
   methods: {
@@ -61,12 +66,20 @@ export default {
       return dateFormated;
     },
     updateDescription(e) {
-      this.transactionItem.Description = e.target.value;
+      // this.transactionItem.Description = e.target.value;
+      this.transaction.Description = e.target.value;
     },
-    submit(transaction) {
-      this.$store.dispatch(DESCRIPTION_EDIT, transaction);
-      this.isOpen = !this.isOpen;
-      this.transaction.Description = this.transactionItem.Description;
+    submit() {
+      this.$store
+        .dispatch(DESCRIPTION_EDIT, this.transaction)
+        .then(() => {
+          this.errors = {};
+          this.isOpen = !this.isOpen;
+        })
+        .catch(({ response }) => {
+          this.errors = response.data.Description;
+          this.hasError = !this.hasError;
+        });
     }
   },
   mounted() {

@@ -58,14 +58,16 @@ router.post("/:id", async (req, res, next) => {
   const { Description } = req.body;
   const { id } = req.params;
   const { errors, isValid } = validateFormInput(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const addDescription = `UPDATE customers SET Description = '${Description}' WHERE id = '${id}';`;
   const getRecord = `SELECT * from customers WHERE id = '${id}';`;
   const sqlReq = await pool();
   await sqlReq.query(addDescription);
   const gotRec = await sqlReq.query(getRecord);
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
+
   try {
     let recArr = gotRec[0];
     let transaction = recArr[Object.keys(recArr)[0]];
