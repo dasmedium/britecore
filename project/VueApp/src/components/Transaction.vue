@@ -33,7 +33,6 @@
   </tr>
 </template>
 <script>
-import moment from "moment";
 import { DESCRIPTION_EDIT } from "../store/actions.type";
 import IconBase from "./icons/IconBase.vue";
 import IconWrite from "./icons/IconWrite.vue";
@@ -61,12 +60,7 @@ export default {
     };
   },
   methods: {
-    dateFormat(date) {
-      const dateFormated = moment(date, moment.ISO_8601).format("MMM Do YY");
-      return dateFormated;
-    },
     updateDescription(e) {
-      // this.transactionItem.Description = e.target.value;
       this.transaction.Description = e.target.value;
     },
     submit() {
@@ -81,9 +75,6 @@ export default {
           this.hasError = !this.hasError;
         });
     }
-  },
-  mounted() {
-    this.dateFormat(this.transaction.Date);
   }
 };
 </script>

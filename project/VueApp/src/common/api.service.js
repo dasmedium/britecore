@@ -41,7 +41,7 @@ export default ApiService;
 
 export const TransactionService = {
   query(params) {
-    return ApiService.query("customers/filtered", { params: params });
+    return ApiService.query("customers", { params: params });
   },
   post(params) {
     return ApiService.post("customers" + `/${params.id}`, params);

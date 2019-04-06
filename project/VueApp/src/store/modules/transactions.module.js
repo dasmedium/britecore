@@ -1,7 +1,7 @@
 import { TransactionService } from "../../common/api.service";
 import { GET_DATA, GET_DATA_SUCCESS, GET_DATA_ERROR } from "../mutations.type";
 import { GET_TRANSACTIONS, DESCRIPTION_EDIT } from "../actions.type";
-// import moment from "moment";
+import moment from "moment";
 
 const state = {
   transactions: [],
@@ -15,15 +15,6 @@ const getters = {
     return state.transactionCount;
   },
   transactions(state) {
-    // let transactionArray = state.transactions;
-    // for (var i = 0; i <= transactionArray.length; i++) {
-    //   let dateFormat = moment(transactionArray[i].Date, moment.ISO_8601).format(
-    //     "MMM Do YY"
-    //   );
-    //   transactionArray[i].Date = dateFormat;
-
-    // return transactionArray;
-    // }
     return state.transactions;
   },
   isLoading(state) {
@@ -35,14 +26,14 @@ const getters = {
 };
 
 const actions = {
-  [GET_TRANSACTIONS]({ commit }, params) {
-    commit(GET_DATA);
+  [GET_TRANSACTIONS](context, params) {
+    context.commit(GET_DATA);
     return TransactionService.query(params.filters)
       .then(({ data }) => {
-        commit(GET_DATA_SUCCESS, data);
+        context.commit(GET_DATA_SUCCESS, data);
       })
       .catch(error => {
-        commit(GET_DATA_ERROR, error);
+        context.commit(GET_DATA_ERROR, error);
       });
   },
   async [DESCRIPTION_EDIT](context, payload) {
@@ -55,11 +46,14 @@ const mutations = {
     state.isLoading = true;
   },
   [GET_DATA_SUCCESS](state, { transactions, transactionCount }) {
-    // const transactionObject = transactions.map(transaction => {
-    //    moment(transaction.Date, moment.ISO_8601).format("MMM Do YY");
-    //   return transactions;
-    // });
-
+    const transactionArray = transactions.map(transaction => {
+      transaction = {
+        ...transaction,
+        Date: moment(transaction.Date, moment.ISO_8601).format("MMM Do YY")
+      };
+      return transaction;
+    });
+    transactions = transactionArray;
     state.transactions = transactions;
     state.transactionCount = transactionCount;
     state.isLoading = false;

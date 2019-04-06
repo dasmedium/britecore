@@ -2,20 +2,34 @@ var express = require("express");
 var router = express.Router();
 const { sql, main, pool } = require("../dbconfig/database");
 const validateFormInput = require("../validation/customer");
+var moment = require("moment");
 
 //Get All
 router.get("/", async function(req, res, next) {
   const sqlReq = await pool();
   try {
-    let customerData = await sqlReq.execute("select * from customers");
+    let customerData;
+    let { offset, limit } = req.query;
+    if (offset !== (null || undefined) && limit !== (null || undefined)) {
+      customerData = await sqlReq.execute(
+        `SELECT * from customers LIMIT ${offset}, ${limit}`
+      );
+    } else {
+      customerData = await sqlReq.execute("select * from customers");
+    }
+
     let transactionCount = customerData[0].length;
-    let transactions = customerData[0];
-    transactions.sort((a, b) => {
+    let transArray = customerData[0];
+    transArray.sort((a, b) => {
       return b.Date - a.Date;
     });
-    // transactions.map(transaction => {
-    //   moment(transaction.Date, moment.ISO_8601).format('MMM Do YYYY');
-    // })
+    const transactions = transArray.map(transaction => {
+      transaction = {
+        ...transaction,
+        Date: moment(transaction.Date, moment.ISO_8601).format("MMM Do YYYY")
+      };
+      return transaction;
+    });
     let response = {
       transactions,
       transactionCount
@@ -26,8 +40,10 @@ router.get("/", async function(req, res, next) {
   }
 });
 // Get with Filters
+// TODO: Add transaction count total and filtered count to main route.
 router.get("/filtered", async function(req, res, next) {
   const { offset, limit } = req.query;
+
   const sqlReq = await pool();
   try {
     let customerData = await sqlReq.execute(
@@ -43,6 +59,13 @@ router.get("/filtered", async function(req, res, next) {
     transactions.sort((a, b) => {
       return b.Date - a.Date;
     });
+    // const transactions = transArray.map(transaction => {
+    //   transaction = {
+    //     ...transaction,
+    //     Date: moment(transaction.Date, moment.ISO_8601).format("MMM Do YYYY")
+    //   };
+    //   return transaction;
+    // });
 
     let response = {
       transactions,
@@ -85,11 +108,18 @@ router.get("/:id", async (req, res, next) => {
   const gotRec = await sqlReq.query(getRecord);
   try {
     let recArr = gotRec[0];
-    let transaction = recArr[Object.keys(recArr)[0]];
+    let transObj = recArr[Object.keys(recArr)[0]];
+    const transaction = {
+      ...transObj,
+      Date: moment(transObj.Date, moment.ISO_8601).format("MMM Do YY")
+    };
 
     return res.send(transaction);
   } catch (err) {
     return res.status(400).json(err);
   }
 });
+
+// TODO: Add delete route.
+
 module.exports = router;
