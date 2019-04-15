@@ -2,7 +2,7 @@
 
 VueJs fullstack application. Implements Api endpoint 
 to query SQL server to manipulate customer transactions. Implements Vuex 
-application state management. All app components Dockerized.
+application state management. SQL server run time scripts for custom docker image. Api and client containerized. 
 
 
 Front End Application Features
