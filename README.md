@@ -1,5 +1,10 @@
 # britecore
 
+VueJs fullstack application. Implements Api endpoint 
+to query SQL server to manipulate customer transactions. Implements Vuex 
+application state management. All app components Dockerized.
+
+
 Front End Application Features
 - Vuex State Management
 - Pagination
